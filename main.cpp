@@ -8,9 +8,11 @@ void push(Node* &top, char* value);
 void pop(Node* &top);
 void peek(Node* top);
 int precedence(char* p);
-
-//void enqueue();
-//void dequeue();
+void enqueue(Node* &front, Node* &rear, char* value);
+void dequeue(Node* &front, Node* &rear);
+bool isEmpty(Node* front, Node* rear);
+void showFront(Node* front, Node* rear);
+void displayQueue(Node* front, Node* rear);
 
 int main() {
   Node* top = NULL;
@@ -56,8 +58,10 @@ int main() {
 	    first = 0;
 	  }
 	  else {
-
+	    
 	  }
+	}
+      }
     }
     else if (strcmp(command, "Quit") == 0 || strcmp(command, "quit") == 0) { //Quit command
       cout << "--Quitting Shunting Yard--" << endl;
@@ -114,5 +118,66 @@ int precedence(char* p) {
   }
   else {
     return 0; //Lowest, which are the numbers
+  }
+}
+
+void enqueue(Node* &front, Node* &rear, char* value) {
+  Node* temp = new Node();
+  temp->setData(value);
+  temp->setNext(NULL);
+  if (front == NULL) {
+    front = temp;
+    reat = temp;
+  }
+  else {
+    rear->setNext(temp);
+    rear = temp;
+  }
+}
+
+void dequeue(Node* &front, Node* &rear) {
+  if (isEmpty(front, rear)) {
+    cout << "Empty queue" << endl;
+  }
+  else if (front == rear) {
+    front == NULL;
+    rear == NULL;
+  }
+  else {
+    Node* temp = front;
+    front = front->getNext();
+    temp->setNext(NULL);
+  }
+}
+
+bool isEmpty(Node* front, Node* rear) {
+  if (front == NULL && rear == NULL) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+void showFront(Node* front, Node* rear) {
+  if (isEmpty(front, rear)) {
+    cout << "Empty queue" << endl;
+  }
+  else {
+    cout << front->getData();
+  }
+}
+
+void displayQueue(Node* front, Node* rear) {
+  if (isEmpty(front, rear)) {
+    cout << "Empty queue" << endl;
+  }
+  else {
+    Node* temp = front;
+    while (temp != NULL) {
+      cout << temp->getData() << " ";
+      temp = temp->getNext();
+    }
+    cout << endl;
   }
 }
