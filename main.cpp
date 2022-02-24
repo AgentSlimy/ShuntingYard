@@ -35,7 +35,7 @@ int main() {
     cin.ignore(10000, '\n');
     if (strcmp(command, "Calculate") == 0 || strcmp(command, "calculate") == 0) { // Calculate command
       cout << "-------Calculate-------" << endl << endl;
-      cout << "Input equation in the infix notation:";
+      cout << "Input equation in the infix notation: ";
       cin.get(input, 100);
       cin.clear();
       cin.ignore(10000, '\n');
@@ -58,9 +58,36 @@ int main() {
 	    first = 0;
 	  }
 	  else {
-	    
+	    char* temp = new char[10];
+	    for (int z = 0; z < sizeof(temp); z++) {
+	      temp[z] = 0;
+	    }
+	    for (int z = 0; z < 1; z++) {
+	      temp[z] = input[i-1+z];
+	    }
+	    modifyIf[inputCount] = temp;
+	    inputCount++;
+	    first = 0;
 	  }
 	}
+	else {
+	  char* temp = new char[10];
+	  for (int z = 0; z < sizeof(temp); z++) {
+	    temp[z] = 0;
+	  }
+	  first++;
+	  if (i == strlen(input) - 1) {
+	    for (int z = 0; z < 1; z++) {
+	      temp[z] = input[i+z+1-first];
+	    }
+	    modifyIf[inputCount] = temp;
+	    inputCount++;
+	  }
+	}
+      }
+      cout << "Input Recieved" << endl << endl;
+      for (int z = 0; z < inputCount; z++) {
+	cout << modifyIf[z] << " precedence: " << precedence(modifyIf[z]) << endl;
       }
     }
     else if (strcmp(command, "Quit") == 0 || strcmp(command, "quit") == 0) { //Quit command
@@ -91,7 +118,7 @@ void pop(Node* &top) {
   }
 }
 
-void peek(Node* top) {
+/*void peek(Node* top) {
   if (top == NULL) {
     cout << "Stack is empty" << endl;
     Node* none = new Node();
@@ -100,7 +127,7 @@ void peek(Node* top) {
   else {
     return top;
   }
-}
+  }*/
 
 //Determines the importance of characters
 int precedence(char* p) {
@@ -127,7 +154,7 @@ void enqueue(Node* &front, Node* &rear, char* value) {
   temp->setNext(NULL);
   if (front == NULL) {
     front = temp;
-    reat = temp;
+    rear = temp;
   }
   else {
     rear->setNext(temp);
