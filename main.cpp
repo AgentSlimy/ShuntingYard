@@ -1,13 +1,23 @@
+//Author: Nathan Zou
+//Date: 3/2/22
+//Shunting Yard Algorithm with help from Stefan Ene and Chris Zou
+/*Other Online Sources:
+
+ */
+
 #include <iostream>
 #include <cstring>
 #include "node.h"
 
 using namespace std;
 
+//Stack functions
 void push(Node* &top, char* value);
 void pop(Node* &top);
 void peek(Node* top);
+//Precedence function
 int precedence(char* p);
+//Queue functions
 void enqueue(Node* &front, Node* &rear, char* value);
 void dequeue(Node* &front, Node* &rear);
 bool isEmpty(Node* front, Node* rear);
@@ -15,9 +25,9 @@ void showFront(Node* front, Node* rear);
 void displayQueue(Node* front, Node* rear);
 
 int main() {
-  Node* top = NULL;
-  Node* front = NULL;
-  Node* rear = NULL;
+  Node* top = NULL; //Stack, latest node add in stack
+  Node* front = NULL; //Queue, first node in queue
+  Node* rear = NULL; //Queue, last node in queue
 
   int signCount = 0;
   int numCount = 0;
@@ -39,8 +49,9 @@ int main() {
       cin.get(input, 100);
       cin.clear();
       cin.ignore(10000, '\n');
-      char** modifyIf = new char*[100];
-      top = NULL;
+      char** modifyIf = new char*[100]; //Used to clear char* array
+      //Clear stack and queues
+      top = NULL; 
       front = NULL;
       rear = NULL;
       int first = 0; //Keeps track of the # of chars before space
@@ -49,7 +60,7 @@ int main() {
 	if (input[i] == ' ') {
 	  if (first == 1) {
 	    char *temp = new char[10];
-	    for (int z = 0; z < sizeof(temp); z++) {
+	    for (int z = 0; z < sizeof(temp); z++) { //Clear temp memory
 	      temp[z] = 0;
 	    }
 	    temp[0] = input[i-1];
@@ -59,7 +70,7 @@ int main() {
 	  }
 	  else {
 	    char* temp = new char[10];
-	    for (int z = 0; z < sizeof(temp); z++) {
+	    for (int z = 0; z < sizeof(temp); z++) { //Clear temp memory
 	      temp[z] = 0;
 	    }
 	    for (int z = 0; z < 1; z++) {
@@ -72,11 +83,11 @@ int main() {
 	}
 	else {
 	  char* temp = new char[10];
-	  for (int z = 0; z < sizeof(temp); z++) {
+	  for (int z = 0; z < sizeof(temp); z++) { //Clear temp memory
 	    temp[z] = 0;
 	  }
 	  first++;
-	  if (i == strlen(input) - 1) {
+	  if (i == strlen(input) - 1) { //The last possible pair of chars
 	    for (int z = 0; z < 1; z++) {
 	      temp[z] = input[i+z+1-first];
 	    }
@@ -86,9 +97,48 @@ int main() {
 	}
       }
       cout << "Input Recieved" << endl << endl;
-      for (int z = 0; z < inputCount; z++) {
+      for (int z = 0; z < inputCount; z++) { //Print out all tokens w/ the precedence of each
 	cout << modifyIf[z] << " precedence: " << precedence(modifyIf[z]) << endl;
       }
+      int sy = 0;
+      //Start of Shunting Yard Algorithm
+      while (sy < inputCount) {
+	if (precedence(modifyIf[sy]) == 0) { //If token is a number
+	  enqueue(front, rear, modifyIf[sy]);
+	}
+	if (precedence(modifyIf[sy]) == 1 || precedence(modifyIf[sy]) == 2 || precedence(modifyIf[sy]) == 3) { //If token is a operator
+	  if (top != NULL) {
+	    while (precedence(top->getData()) >= precedence(modifyIf[sy]) && *top->getData() != '(') { 
+	      enqueue(front, rear, top->getData()); //pop from stack and enqueue on output queue
+	      pop(top);
+	      if (top == NULL) break;
+	    }
+	  }
+	  push(top, modifyIf[sy]); //Push to stack
+	}
+	if (*modifyIf[sy] == '(') { //If token is a left parenthesis
+	  push(top, modifyIf[sy]); //Push to stack
+	}
+	if (*modifyIf[sy] == ')') { //If token is a right parenthesis
+	  while (*top->getData() != '(') {
+	    enqueue(front, rear, top->getData());
+	    pop(top);
+	  }
+	  if (*top->getData() == '(') {
+	    pop(top); //Pop from stack and remove
+	  }
+	}
+	sy++; //Next token
+      }
+      if (sy == inputCount) {
+	while (top != NULL) {
+	  enqueue(front, rear, top->getData());
+	  pop(top);
+	}
+      }
+      cout << "Binary Tree Created" << endl;
+      displayQueue(front, rear);
+      
     }
     else if (strcmp(command, "Quit") == 0 || strcmp(command, "quit") == 0) { //Quit command
       cout << "--Quitting Shunting Yard--" << endl;
