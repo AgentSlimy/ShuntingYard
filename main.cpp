@@ -4,6 +4,7 @@
 /*Other Online Sources:
     Stack & Queues: https://www.youtube.com/watch?v=kKjYSBeDpFA
                     https://www.youtube.com/watch?v=A3ZUpyrnCbM
+                    https://www.geeksforgeeks.org/stack-set-4-evaluation-postfix-expression/
     Shunting Yard Algorithm: https://en.wikipedia.org/wiki/Shunting-yard_algorithm
                              https://rosettacode.org/wiki/Parsing/Shunting-yard_algorithm
     Binary Tree: https://en.wikipedia.org/wiki/Binary_expression_tree
@@ -11,6 +12,7 @@
                  https://www.geeksforgeeks.org/binary-tree-set-2-properties/
     Infix->Postfix/Prefix: https://www.geeksforgeeks.org/stack-set-2-infix-to-postfix/
                            https://www.geeksforgeeks.org/convert-infix-prefix-notation/
+                           https://www.tutorialspoint.com/program-to-evaluate-postfix-notation-in-cplusplus
 
  */
 
@@ -21,20 +23,20 @@
 using namespace std;
 
 //Stack functions
-void push(Node* &top, char* value);
-void pop(Node* &top);
+void push(Node*& top, char* value);
+void pop(Node*& top);
 Node* peek(Node* top);
 //Precedence function
 int precedence(char* p);
 //Queue functions
-void enqueue(Node* &front, Node* &rear, char* value);
-void dequeue(Node* &front, Node* &rear);
+void enqueue(Node*& front, Node*& rear, char* value);
+void dequeue(Node*& front, Node*& rear);
 bool isEmpty(Node* front, Node* rear);
 void showFront(Node* front, Node* rear);
 void displayQueue(Node* front, Node* rear);
 //Tree functions
-void pushTree(Node* &tree, Node* &add);
-void popTree(Node* &tree);
+void pushTree(Node*& tree, Node*& add);
+void popTree(Node*& tree);
 //Display tree funcitons
 void disInfix(Node* InF);
 void disPrefix(Node* PreF);
@@ -179,7 +181,7 @@ int main() {
             cin.ignore(10000, '\n');
             cout << "--Output--" << endl;
             if (strcmp(display, "in") == 0) { //infix notation
-                disInfix(tree); 
+                disInfix(tree);
             }
             else if (strcmp(display, "pre") == 0) { //prefix notation
                 disPrefix(tree);
@@ -203,7 +205,7 @@ int main() {
 }
 
 //Adds new elements at the end of stack
-void push(Node* &top, char* value) { //Push function
+void push(Node*& top, char* value) { //Push function
     Node* temp = new Node();
     temp->setData(value);
     temp->setNext(top);
@@ -211,7 +213,7 @@ void push(Node* &top, char* value) { //Push function
 }
 
 //Removes newest added element
-void pop(Node* &top) { //Pop function
+void pop(Node*& top) { //Pop function
     if (top == NULL) {
         cout << "Empty" << endl;
     }
@@ -224,18 +226,18 @@ void pop(Node* &top) { //Pop function
 
 //Semi-useless, already have top :/
 Node* peek(Node* top) { //Peek function
-  if (top == NULL) {
-    cout << "Stack is empty" << endl;
-    Node* none = new Node();
-    return none;
-  }
-  else {
-    return top;
-  }
+    if (top == NULL) {
+        cout << "Stack is empty" << endl;
+        Node* none = new Node();
+        return none;
+    }
+    else {
+        return top;
+    }
 }
 
 //Determines the importance of characters, Precedence function
-int precedence(char* p) { 
+int precedence(char* p) {
     if (*p == '^') {
         return 3; //Highest
     }
@@ -254,7 +256,7 @@ int precedence(char* p) {
 }
 
 //Adds node to queue 
-void enqueue(Node* &front, Node* &rear, char* value) { //Enqueue function
+void enqueue(Node*& front, Node*& rear, char* value) { //Enqueue function
     Node* temp = new Node();
     temp->setData(value);
     temp->setNext(NULL);
@@ -269,7 +271,7 @@ void enqueue(Node* &front, Node* &rear, char* value) { //Enqueue function
 }
 
 //Removes first node in queue
-void dequeue(Node* &front, Node* &rear) { //Dequeue function
+void dequeue(Node*& front, Node*& rear) { //Dequeue function
     if (isEmpty(front, rear)) {
         cout << "Empty queue" << endl;
     }
@@ -318,7 +320,7 @@ void displayQueue(Node* front, Node* rear) { //DisplayQueue function
 }
 
 //Tree functions
-void pushTree(Node* &tree, Node* &add) { //PushTree function
+void pushTree(Node*& tree, Node*& add) { //PushTree function
     if (tree == NULL) { //Empty tree
         add->setNext(tree);
         tree = add;
@@ -337,7 +339,7 @@ void pushTree(Node* &tree, Node* &add) { //PushTree function
             popTree(tree);
             right->setNext(NULL);
             //Push operator node
-            add->setNext(NULL);
+            add->setNext(tree);
             tree = add;
             //Make the two popped numbers left and right pointers of operator node
             tree->setLeft(left);
@@ -346,7 +348,7 @@ void pushTree(Node* &tree, Node* &add) { //PushTree function
     }
 }
 
-void popTree(Node* &tree) { //PopTree function
+void popTree(Node*& tree) { //PopTree function
     if (tree == NULL) {
         cout << "Tree stack is empty" << endl;
     }
